@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, Injectable} from '@angular/core';
+import {HttpEvent, HttpEventType, HttpHandler, HttpInterceptor, HttpProgressEvent, HttpRequest, HttpResponse} from '@angular/common/http';
+import {concat, Observable, of} from 'rxjs';
+import {delay} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +10,33 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'PaymentsFront';
+}
+@Injectable()
+export class UploadInterceptor implements HttpInterceptor {
+
+  constructor() {
+    // console.log('G')
+  }
+
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (req.url === 'saveUrl') {
+      const events: Observable<HttpEvent<any>>[] = [0, 30, 60, 100].map((x) => of(<HttpProgressEvent>{
+        type: HttpEventType.UploadProgress,
+        loaded: x,
+        total: 100
+      }).pipe(delay(1000)));
+
+      const success = of(new HttpResponse({status: 200})).pipe(delay(1000));
+      events.push(success);
+
+      return concat(...events);
+    }
+
+    if (req.url === 'removeUrl') {
+      return of(new HttpResponse({status: 200}));
+    }
+
+    return next.handle(req);
+
+  }
 }
