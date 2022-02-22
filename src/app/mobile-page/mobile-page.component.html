@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="payment">
+    <div class="payment-logo">
+      <img class="voke" src="../../assets/img/3.png" alt="">
+    </div>
+
+
+    <h2>მობილური</h2>
+    <div class="form">
+      <div class="card space icon-relative">
+        <label class="label">ტელეფონის ნომერი</label>
+        <input type="text" class="input" placeholder="5XXXXXXXX" maxlength="9" pattern="[5]?\d{2}\d{2}\d{2}\d{2}"  [(ngModel)]="mobileNumber" numbersOnly required #mobileNumberControl = "ngModel" [class.input-err] ="mobileNumberControl.errors?.pattern" (ngModelChange)="checkMobileNumberInpStatus($event)">
+        <span class="span-error" *ngIf="mobileNumberControl.errors?.pattern">* მობილურის ნომერი უნდა იყოს 9 ნიშნა  </span>
+        <p class="span-error" *ngIf="mobileNumberControl.errors?.pattern">* მობილურის ნომერი უნდა იწყებოდეს 5-ით</p>
+        <i class="far fa-credit-card"></i>
+      </div>
+      <div class="card space icon-relative">
+        <label class="label">თანხა </label>
+        <input type="text" class="input"  placeholder="შეიყვანეთ თანხის რაოდენობა" min="1" max="100" maxlength="4" pattern="[1-9]{1}[0-9]{9}" [(ngModel)]="amount" required #amountControl = "ngModel" [class.input-err] ="!amountInpStatus" (ngModelChange)="calculateTax($event)">
+        <span class="span-error" *ngIf="!amountInpStatus">* მინიმალური თანხა 1 ლარი მაქსიმალური 100ლარი</span>
+        <i class="far fa-credit-card"></i>
+      </div>
+      <div class="card space icon-relative">
+        <label class="label">საკომისიო</label>
+        <div  class="input" >{{taxValue}}</div>
+        <i class="far fa-credit-card"></i>
+      </div>
+    </div>
+
+    <div class="btn">
+      <div class="multi-button">
+        <button (click)="goToHomePage()">უკან</button>
+
+        <button (click)="saveMobileTransaction()" *ngIf="!mobileNumberControl.errors?.pattern && mobileNumberInpStatus && showbtn">გადახდა</button>
+
+      </div>
+
+
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
